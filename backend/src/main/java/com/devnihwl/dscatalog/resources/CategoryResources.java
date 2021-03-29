@@ -2,14 +2,14 @@ package com.devnihwl.dscatalog.resources;
 
 
 import com.devnihwl.dscatalog.dto.CategoryDTO;
+import com.devnihwl.dscatalog.entities.Category;
 import com.devnihwl.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,5 +32,16 @@ public class CategoryResources {
     @GetMapping (value = "/{id}")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO category){
+        category = service.insert(category);
+
+        // Inserir local da inserção no Header. 201 Created
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(category.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(category);
+
     }
 }

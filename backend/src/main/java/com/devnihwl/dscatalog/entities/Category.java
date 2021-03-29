@@ -1,5 +1,7 @@
 package com.devnihwl.dscatalog.entities;
 
+import com.devnihwl.dscatalog.dto.CategoryDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,6 +24,11 @@ public class Category implements Serializable {
     public Category(String name, Long id) {
         this.name = name;
         this.id = id;
+    }
+
+    public Category(CategoryDTO dto){
+        this.id = null;
+        this.name = dto.getName();
     }
 
     public String getName() {

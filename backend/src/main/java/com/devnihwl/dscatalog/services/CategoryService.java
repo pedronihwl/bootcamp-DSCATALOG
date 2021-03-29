@@ -27,6 +27,13 @@ public class CategoryService {
         return list.stream().map(CategoryDTO::new).collect(Collectors.toList());
     }
 
+    @Transactional
+    public CategoryDTO insert (CategoryDTO dto){
+        Category category = new Category(dto);
+        category = repository.save(category);
+        return new CategoryDTO(category);
+    }
+
     @Transactional (readOnly = true)
     public CategoryDTO findById(Long id){
         Optional<Category> entity = repository.findById(id);
