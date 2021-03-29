@@ -34,6 +34,18 @@ public class CategoryResources {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
+    @PutMapping (value = "/{id}")
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto){
+        dto = service.update(id,dto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping (value = "/{id}")
+    public ResponseEntity<CategoryDTO> delete(@PathVariable Long id){
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO category){
         category = service.insert(category);
