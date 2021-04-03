@@ -2,9 +2,11 @@ package com.devnihwl.dscatalog.resources;
 
 
 import com.devnihwl.dscatalog.dto.CategoryDTO;
-import com.devnihwl.dscatalog.entities.Category;
 import com.devnihwl.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,9 +24,17 @@ public class CategoryResources {
     // Objeto do Spring que encapsula uma resposta HTTP
     // OK 200: Respostas padrão para requisições HTTP bem-sucedidas
 
+
+    // Busca paginada
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll(){
-        List<CategoryDTO> list = service.findAll();
+    public ResponseEntity<Page<CategoryDTO>> findAll(
+            @RequestParam (value = "page", defaultValue = "0") Integer page,
+            @RequestParam (value = "lines", defaultValue = "6") Integer lines,
+            @RequestParam (value = "direction", defaultValue = "DESC") String direction,
+            @RequestParam (value = "order", defaultValue = "name")  String order
+    ){
+        PageRequest pageRequest = PageRequest.of(page,lines, Sort.Direction.valueOf(direction),order);
+        Page<CategoryDTO> list = service.findAllPaged(pageRequest);
 
         return ResponseEntity.ok().body(list);
     }
