@@ -19,10 +19,15 @@
 *.tar.gz
 *.rar
 
+.node_modules/
+package-lock.json
+
 .idea/
 .vscode
 .metadata
 .mvn
+
+node_modules
 
 mvnw
 mvnw.cmd
