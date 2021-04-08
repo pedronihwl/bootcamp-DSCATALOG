@@ -29,6 +29,10 @@ package-lock.json
 
 node_modules
 
+HELP.md
+
+.target/
+
 mvnw
 mvnw.cmd
 
