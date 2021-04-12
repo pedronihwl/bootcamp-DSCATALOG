@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const Home = () => {
     return <div className="home-container">
-        <div className="row home-content">
+        <div className="row home-content card-base">
             <div className="col-6 home-text">
                 <h1 className="home-title">Conheça o melhor <br/> catálogo de produtos</h1>
 
