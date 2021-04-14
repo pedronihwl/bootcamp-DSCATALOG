@@ -10,7 +10,7 @@ const Home = () => {
                 <h1 className="home-title">Conheça o melhor <br/> catálogo de produtos</h1>
 
                 <p className="home-description">Ajudaremos você a encontrar os <br/> melhores produtos disponíveis no mercado.</p>
-                <Link to="/catalog">
+                <Link to="products">
                     <MainButton texto="INICIE AGORA SUA BUSCA"/>
                 </Link>
             </div>

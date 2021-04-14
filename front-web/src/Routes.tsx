@@ -2,6 +2,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import NavBar from './core/components/NavBar'
 import Admin from './pages/Admin'
 import Catalog from './pages/Catalog'
+import ProductDescription from './pages/Catalog/components/ProductDescription/ProductDescription'
 import Home from './pages/Home'
 
 // gerencia todas as rotas do projeto
@@ -11,17 +12,20 @@ import Home from './pages/Home'
 const Routes = () => (
     <BrowserRouter> 
     <NavBar/>
-       <switch>
+       <Switch>
            <Route path="/" exact>
                <Home/>
            </Route>
-           <Route path="/catalog">
+           <Route path="/products" exact>
                <Catalog/>
+           </Route>
+           <Route path="/products/:productId">
+               <ProductDescription/>
            </Route>
            <Route path="/admin">
                <Admin/>
            </Route>
-       </switch>
+       </Switch>
     </BrowserRouter>
     )
 
