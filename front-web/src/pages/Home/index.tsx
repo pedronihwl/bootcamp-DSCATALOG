@@ -1,6 +1,6 @@
 import './style.scss'
-import {ReactComponent as MainImage} from '../../core/assets/images/main-image.svg'
-import MainButton from '../../core/components/MainButton'
+import {ReactComponent as MainImage} from 'core/assets/images/main-image.svg'
+import MainButton from 'core/components/MainButton'
 import { Link } from 'react-router-dom'
 
 const Home = () => {
