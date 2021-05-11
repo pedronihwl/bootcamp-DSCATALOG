@@ -1,0 +1,29 @@
+.nav-menu-container {
+    background-color: #FFF;
+    width: 304px;
+    height: calc(100vh - 70px);
+}
+
+.nav-menu-item {
+    width: 304px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #E1E1E1;
+
+    font-size: 18px;
+    line-height: 25px;
+    letter-spacing: -0.015em;
+    color: #9E9E9E;
+    font-weight: bold;
+    padding-left: 40px;
+
+    &.active {
+        background-color: rgba(64, 123, 255, 0.3);
+        color: #407BFF;
+    }
+    &:hover {
+        color: #407BFF;
+    }
+}
+

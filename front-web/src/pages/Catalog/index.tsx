@@ -5,23 +5,26 @@ import { useEffect, useState } from 'react'
 import { makeRequest } from 'core/utils/requests'
 import { ContentResponse } from 'core/types/Product'
 import ProductCardLoader from './components/Loaders/ProductCardLoader'
+import Pagination from 'core/components/Pagination'
 
 const Catalog = () => {
 
     const [contentResponse, setContentResponse] = useState<ContentResponse>();
     const [isLoading, setIsLoading] = useState(false);
+    const [activePage, setActivePage] = useState(0);
 
     useEffect(() => {
         const params = {
-            page: 0,
+            page: activePage,
             lines: 12
+        
         }
         setIsLoading(true);
-        makeRequest({url: '/products', params})
+        makeRequest({url: '/products', params,})
         .then(r => setContentResponse(r.data)).finally(() => {
             setIsLoading(false);
         })
-    },[])
+    },[activePage])
 
     
     return (<div className="catalog-container">
@@ -33,6 +36,9 @@ const Catalog = () => {
                 </Link>
             ))}
         </div>
+        {contentResponse && <Pagination totalPages={contentResponse?.totalPages} activePage={activePage} 
+        // (A função é declarada aqui) 'page' é o parâmetro da função. A função serve para chamar o setActivePage
+        onChange={page => setActivePage(page)} />}
     </div>)
 }
 
