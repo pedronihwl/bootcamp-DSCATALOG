@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import NavBar from './core/components/NavBar'
 import Admin from './pages/Admin'
 import Catalog from './pages/Catalog'
@@ -22,6 +22,7 @@ const Routes = () => (
            <Route path="/products/:productId">
                <ProductDescription/>
            </Route>
+           <Redirect from="/admin" to="/admin/products" exact/>
            <Route path="/admin">
                <Admin/>
            </Route>

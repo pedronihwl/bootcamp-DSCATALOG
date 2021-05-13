@@ -22,7 +22,7 @@ const ProductDescription = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        makeRequest({ url: `/products/${productId}` })
+        makeRequest({ url: `/products/${productId}`})
             .then(r => setProduct(r.data))
             .finally(() => {
                 setIsLoading(false)
