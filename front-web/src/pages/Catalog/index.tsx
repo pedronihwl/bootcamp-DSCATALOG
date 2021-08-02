@@ -35,6 +35,7 @@ const Catalog = () => {
                     <ProductCard product={p}/>
                 </Link>
             ))}
+        
         </div>
         {contentResponse && <Pagination totalPages={contentResponse?.totalPages} activePage={activePage} 
         // (A função é declarada aqui) 'page' é o parâmetro da função. A função serve para chamar o setActivePage
