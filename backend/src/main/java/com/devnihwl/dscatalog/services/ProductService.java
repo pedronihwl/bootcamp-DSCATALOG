@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +30,12 @@ public class ProductService {
     private CategoryRepository catRepository;
 
     @Transactional (readOnly = true)
-    public Page<ProductDTO> findAllPaged(PageRequest pageRequest){
+    public Page<ProductDTO> findAllPaged(Pageable pageRequest){
         Page<Product> list = repository.findAll(pageRequest);
 
         // return list.stream().map(cat -> new ProductDTO(cat)).collect(Collectors.toList());
         // Page já é um tipo Stream
+
         return list.map(ProductDTO::new);
     }
 
@@ -42,7 +44,7 @@ public class ProductService {
         Product product = new Product();
         dtoToEntity(dto,product);
         product = repository.save(product);
-        return new ProductDTO(product);
+        return new ProductDTO(product,product.getCategories());
     }
 
     private void dtoToEntity(ProductDTO dto, Product product){
@@ -83,7 +85,7 @@ public class ProductService {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e){
-            throw new NotFoundException("Id non existent" + id);
+            throw new NotFoundException("Id non existent " + id);
         } catch (DataIntegrityViolationException e){
             throw new DataBaseException("Integrity Violation. You cannot delete a Product with products");
         }

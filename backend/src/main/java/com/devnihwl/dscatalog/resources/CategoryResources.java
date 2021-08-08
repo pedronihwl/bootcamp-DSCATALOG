@@ -6,6 +6,7 @@ import com.devnihwl.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +28,8 @@ public class CategoryResources {
 
     // Busca paginada
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(
-            @RequestParam (value = "page", defaultValue = "0") Integer page,
-            @RequestParam (value = "lines", defaultValue = "6") Integer lines,
-            @RequestParam (value = "direction", defaultValue = "DESC") String direction,
-            @RequestParam (value = "order", defaultValue = "name")  String order
-    ){
-        PageRequest pageRequest = PageRequest.of(page,lines, Sort.Direction.valueOf(direction),order);
-        Page<CategoryDTO> list = service.findAllPaged(pageRequest);
+    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable){
+        Page<CategoryDTO> list = service.findAllPaged(pageable);
 
         return ResponseEntity.ok().body(list);
     }
