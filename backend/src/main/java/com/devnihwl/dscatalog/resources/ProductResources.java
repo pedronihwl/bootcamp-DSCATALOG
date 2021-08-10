@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -42,7 +43,7 @@ public class ProductResources {
 
 
     @PutMapping (value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto){
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto){
         dto = service.update(id,dto);
         return ResponseEntity.ok().body(dto);
     }
@@ -54,7 +55,7 @@ public class ProductResources {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO product){
+    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO product){
         product = service.insert(product);
 
         // Inserir local da inserção no Header. 201 Created

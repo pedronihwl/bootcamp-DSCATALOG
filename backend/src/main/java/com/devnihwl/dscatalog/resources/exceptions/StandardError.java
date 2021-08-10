@@ -1,7 +1,9 @@
 package com.devnihwl.dscatalog.resources.exceptions;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.Instant;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StandardError {
     private Instant timestamp;
     private Integer status;
@@ -56,4 +58,6 @@ public class StandardError {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public void addError(String fieldName, String message){ }
 }

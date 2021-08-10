@@ -2,6 +2,10 @@ package com.devnihwl.dscatalog.dto;
 import com.devnihwl.dscatalog.entities.Category;
 import com.devnihwl.dscatalog.entities.Product;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -10,10 +14,17 @@ import java.util.Set;
 
 public class ProductDTO implements Serializable {
     private Long id;
+
+    @Size (min = 5, max = 50, message = "Nome inválido")
+    @NotBlank (message = "Campo obrigatório")
     private String name;
     private String description;
+
+    @Positive (message = "Preço deve ser válido")
     private Double price;
     private String imgUrl;
+
+    @PastOrPresent (message = "A data não pode ser futura")
     private Instant date;
 
     private List<CategoryDTO> categories = new ArrayList<>();

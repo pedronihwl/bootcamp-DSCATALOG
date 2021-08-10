@@ -4,6 +4,7 @@ package com.devnihwl.dscatalog.services;
 import com.devnihwl.dscatalog.dto.RoleDTO;
 import com.devnihwl.dscatalog.dto.UserDTO;
 import com.devnihwl.dscatalog.dto.UserInsertDTO;
+import com.devnihwl.dscatalog.dto.UserUpdateDTO;
 import com.devnihwl.dscatalog.entities.User;
 import com.devnihwl.dscatalog.repositories.RoleRepository;
 import com.devnihwl.dscatalog.repositories.UserRepository;
@@ -71,7 +72,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try{
             User u = repository.getOne(id);
             dtoToEntity(u,dto);

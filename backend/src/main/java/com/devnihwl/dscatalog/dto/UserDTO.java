@@ -2,13 +2,19 @@ package com.devnihwl.dscatalog.dto;
 
 import com.devnihwl.dscatalog.entities.User;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDTO {
     private Long id;
+
+    @NotEmpty (message = "Campo obrigatório")
     private String firstName;
     private String lastName;
+
+    @Email (message = "Email deve ser válido")
     private String email;
 
     private final List<RoleDTO> roles = new ArrayList<>();
