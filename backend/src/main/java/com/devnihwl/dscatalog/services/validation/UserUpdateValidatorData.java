@@ -1,6 +1,5 @@
 package com.devnihwl.dscatalog.services.validation;
 
-import com.devnihwl.dscatalog.dto.UserInsertDTO;
 import com.devnihwl.dscatalog.dto.UserUpdateDTO;
 import com.devnihwl.dscatalog.entities.User;
 import com.devnihwl.dscatalog.repositories.UserRepository;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class UserUpdateValidatorData implements ConstraintValidator<UserInsertValid, UserUpdateDTO> {
+public class UserUpdateValidatorData implements ConstraintValidator<UserValid, UserUpdateDTO> {
 
     @Autowired
     private HttpServletRequest request;

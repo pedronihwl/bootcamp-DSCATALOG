@@ -10,11 +10,16 @@ import com.devnihwl.dscatalog.repositories.RoleRepository;
 import com.devnihwl.dscatalog.repositories.UserRepository;
 import com.devnihwl.dscatalog.services.exceptions.DataBaseException;
 import com.devnihwl.dscatalog.services.exceptions.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +28,11 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository repository;
-
     private final RoleRepository roleRepository;
-
     private BCryptPasswordEncoder encoder;
 
     @Autowired
@@ -91,5 +96,18 @@ public class UserService {
         } catch (DataIntegrityViolationException e){
             throw new DataBaseException("Integrity Violation. You cannot delete a category with products");
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        User u = repository.findByEmail(email);
+        if(u == null){
+            logger.error("Username not found: " + email);
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        logger.info("User found: " + email);
+        return u;
     }
 }

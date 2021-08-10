@@ -1,6 +1,6 @@
 package com.devnihwl.dscatalog.dto;
 
-import com.devnihwl.dscatalog.services.validation.UserInsertValid;
+import com.devnihwl.dscatalog.services.validation.UserValid;
 
-@UserInsertValid
+@UserValid
 public class UserUpdateDTO extends UserDTO{ }
