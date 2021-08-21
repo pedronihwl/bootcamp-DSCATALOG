@@ -29,9 +29,12 @@ public class ProductResources {
 
     // Busca paginada sem RequestParam e com Pageable
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){
-        // page, size, sort
-        Page<ProductDTO> list = service.findAllPaged(pageable);
+    public ResponseEntity<Page<ProductDTO>> findAll(
+            @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+            @RequestParam(value = "name", defaultValue = "") String name,
+            Pageable pageable) {
+        // page, size, sort - Pageable
+        Page<ProductDTO> list = service.findAllPaged(categoryId, name.trim(),pageable);
 
         return ResponseEntity.ok().body(list);
     }
@@ -62,6 +65,5 @@ public class ProductResources {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(product.getId()).toUri();
 
         return ResponseEntity.created(uri).body(product);
-
     }
 }

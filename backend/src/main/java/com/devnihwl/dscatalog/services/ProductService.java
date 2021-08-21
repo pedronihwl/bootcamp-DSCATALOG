@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,14 +32,24 @@ public class ProductService {
     @Autowired
     private CategoryRepository catRepository;
 
-    @Transactional (readOnly = true)
-    public Page<ProductDTO> findAllPaged(Pageable pageRequest){
-        Page<Product> list = repository.findAll(pageRequest);
+//    @Transactional (readOnly = true)
+//    public Page<ProductDTO> findAllPaged(Pageable pageRequest, String name, Long categoryId){
+//        // getOne pega uma referência do objeto com o Id sem tocar o banco
+//        Category cat = (categoryId == 0) ? null : catRepository.getOne(categoryId);
+//        Page<Product> list = repository.find(cat, name, pageRequest);
+//
+//        // return list.stream().map(cat -> new ProductDTO(cat)).collect(Collectors.toList());
+//        // Page já é um tipo Stream
+//
+//        return list.map(ProductDTO::new);
+//    }
 
-        // return list.stream().map(cat -> new ProductDTO(cat)).collect(Collectors.toList());
-        // Page já é um tipo Stream
-
-        return list.map(ProductDTO::new);
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> findAllPaged(Long categoryId, String name, Pageable pageable) {
+        List<Category> categories = (categoryId == 0) ? null : Collections.singletonList(catRepository.getOne(categoryId));
+        Page<Product> page = repository.find(categories, name, pageable);
+        repository.findProductsWithCategories(page.getContent());
+        return page.map(x -> new ProductDTO(x, x.getCategories()));
     }
 
     @Transactional
