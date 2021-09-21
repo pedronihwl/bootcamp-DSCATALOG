@@ -1,3 +1,4 @@
+import Auth from 'pages/Auth'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import NavBar from './core/components/NavBar'
 import Admin from './pages/Admin'
@@ -21,6 +22,10 @@ const Routes = () => (
            </Route>
            <Route path="/products/:productId">
                <ProductDescription/>
+           </Route>
+           <Redirect from="/admin/auth" to="/admin/auth/login" exact/>
+           <Route path="/admin/auth">
+               <Auth/>
            </Route>
            <Redirect from="/admin" to="/admin/products" exact/>
            <Route path="/admin">
