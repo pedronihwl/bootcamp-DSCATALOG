@@ -54,11 +54,8 @@ public class CategoryResources {
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO category){
         category = service.insert(category);
-
         // Inserir local da inserção no Header. 201 Created
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(category.getId()).toUri();
-
         return ResponseEntity.created(uri).body(category);
-
     }
 }
