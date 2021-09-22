@@ -13,7 +13,7 @@ type FormData = {
 }
 
 const Login = () => {
-    const {register, handleSubmit} = useForm<FormData>()
+    const {register, handleSubmit, formState: {errors} } = useForm<FormData>()
     const [hasError, setHasError] = useState(false)
     const history = useHistory()
 
@@ -33,19 +33,36 @@ const Login = () => {
                 <div className="alert alert-danger mt-5">Usuário ou senha inválido</div>
             )}
         <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="margin-bottom-30">
             <input 
-            className="form-control input-base margin-bottom-30"
+            className={`form-control input-base ${errors.username ? 'is-invalid':''}`}
             type="email" 
-            {...register('username',{required: true})}
+            {...register('username',{required: "Email obrigatório", pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Email inválido"
+            }})}
             placeholder="Email"
             />
+            {errors.username && (
+                <div className="invalid-feedback d-block">
+                    {errors.username.message}
+                </div>
+            )}
+            </div>
 
+            <div >
             <input 
-            className="form-control input-base"
+            className={`form-control input-base ${errors.password ? 'is-invalid':''}`}
             {...register('password',{required: true})}
             type="password" 
             placeholder="Senha"
             />
+            {errors.password && (
+                <div className="invalid-feedback d-block">
+                    Campo obrigatório
+                </div>
+            )}
+            </div>
 
             <Link to="/admin/auth/recover" className="login-link-recover">
                 Esqueci a senha?

@@ -1,5 +1,6 @@
 import axios, { Method } from 'axios'
 import qs from 'qs'
+import history from './history'
 
 type Params = {
     met?: Method;
@@ -14,7 +15,6 @@ type LoginDate = {
     password: string;
 }
 
-// Usando proxy
 const BASE_URL = 'https://nihwl-dscatalog.herokuapp.com'
 
 export const makeRequest = ({met, url, data, params, headers}: Params) => {
@@ -25,7 +25,6 @@ export const makeRequest = ({met, url, data, params, headers}: Params) => {
         params,
         headers
     })
-    
 }
 
 const CLIENT_ID = 'dscatalog'
@@ -44,6 +43,21 @@ export const makeLogin = (data: LoginDate) => {
     return makeRequest({url: '/oauth/token', data: payload, met: 'POST', headers: headers});
 }
 
+export const makePrivateRequest = ({met, url, data, params}: Params) => {
+    const token = recoverSessionData();
+
+    const headers = { Authorization: `Bearer ${token.access_token}` }
+
+    return makeRequest({met, url, data, params, headers});
+}
+
+axios.interceptors.response.use((response) => {return response}, (error) => {
+    if(error.response.status === 401){
+        history.push('/admin/auth/login')
+    }
+    return Promise.reject(error);
+})
+
 type SessionDate = {
     access_token: string;
     token_type: string;
@@ -55,4 +69,10 @@ type SessionDate = {
 
 export const storageSessionData = (sessionDate: SessionDate) => {
     localStorage.setItem('sessionData', JSON.stringify(sessionDate))
+}
+
+export const recoverSessionData = () => {
+    const sessionData = localStorage.getItem('sessionData') ?? '{ }'
+    // Dando tipo para o retorno da função
+    return JSON.parse(sessionData) as SessionDate
 }

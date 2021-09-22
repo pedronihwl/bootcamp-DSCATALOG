@@ -1,17 +1,18 @@
 import Auth from 'pages/Auth'
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import NavBar from './core/components/NavBar'
 import Admin from './pages/Admin'
 import Catalog from './pages/Catalog'
 import ProductDescription from './pages/Catalog/components/ProductDescription/ProductDescription'
 import Home from './pages/Home'
+import history from 'core/utils/history'
 
 // gerencia todas as rotas do projeto
 // switch responsável por saber o que renderizar
 // route definir cada URL da aplicação
 
 const Routes = () => (
-    <BrowserRouter> 
+    <Router history={history}> 
     <NavBar/>
        <Switch>
            <Route path="/" exact>
@@ -32,7 +33,7 @@ const Routes = () => (
                <Admin/>
            </Route>
        </Switch>
-    </BrowserRouter>
+    </Router>
     )
 
 export default Routes
