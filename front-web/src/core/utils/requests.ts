@@ -54,7 +54,8 @@ export const makePrivateRequest = ({met, url, data, params}: Params) => {
 
 axios.interceptors.response.use((response) => {return response}, (error) => {
     if(error.response.status === 401){
-        history.push('/admin/auth/login')
+        history.push('/auth/login')
+        makeLogout()
     }
     return Promise.reject(error);
 })
@@ -116,4 +117,9 @@ export const isAllowedByRole = (roles : Role[] = []) => {
     const { authorities } = getTokenDecoded()
 
     return roles.some(r => authorities?.includes(r));
+}
+
+export const makeLogout = () => {
+    localStorage.removeItem('sessionData')
+    history.replace('/')
 }
