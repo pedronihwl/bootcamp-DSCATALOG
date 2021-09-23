@@ -6,6 +6,7 @@ import Catalog from './pages/Catalog'
 import ProductDescription from './pages/Catalog/components/ProductDescription/ProductDescription'
 import Home from './pages/Home'
 import history from 'core/utils/history'
+import PrivateRoute from 'core/components/PrivateRoute'
 
 // gerencia todas as rotas do projeto
 // switch responsável por saber o que renderizar
@@ -29,9 +30,9 @@ const Routes = () => (
                <Auth/>
            </Route>
            <Redirect from="/admin" to="/admin/products" exact/>
-           <Route path="/admin">
+           <PrivateRoute path="/admin">
                <Admin/>
-           </Route>
+           </PrivateRoute>
        </Switch>
     </Router>
     )

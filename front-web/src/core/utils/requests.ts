@@ -1,6 +1,7 @@
 import axios, { Method } from 'axios'
 import qs from 'qs'
 import history from './history'
+import jwtDecode from 'jwt-decode'
 
 type Params = {
     met?: Method;
@@ -72,7 +73,35 @@ export const storageSessionData = (sessionDate: SessionDate) => {
 }
 
 export const recoverSessionData = () => {
-    const sessionData = localStorage.getItem('sessionData') ?? '{ }'
+    const sessionData = localStorage.getItem('sessionData') ?? '{}'
     // Dando tipo para o retorno da função
     return JSON.parse(sessionData) as SessionDate
+}
+
+type AccessToken = {
+    exp: number;
+    user_name: string;
+    authorities: Role[]
+}
+
+type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN'
+
+export const getTokenDecoded = () => {
+    const sessionData = recoverSessionData()
+    const tokenDecoded = jwtDecode(sessionData.access_token)
+    return tokenDecoded as AccessToken; 
+}
+
+const isTokenValid = () => {
+    const { exp } =  getTokenDecoded();
+    return Date.now() <= exp * 1000
+}
+
+export const isAuthenticated = () => {
+    // Token não pode estar expirado
+    // 'authData' tem que estar no local storage
+    // Destruct, pegar apenas atributo desejado do objeto
+
+    const sessionData = recoverSessionData();
+    return sessionData.access_token && isTokenValid();
 }
