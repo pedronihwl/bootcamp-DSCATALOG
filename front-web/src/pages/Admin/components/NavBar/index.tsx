@@ -1,3 +1,4 @@
+import { isAllowedByRole } from "core/utils/requests";
 import { NavLink } from "react-router-dom";
 import "./style.scss"
 
@@ -10,9 +11,12 @@ const NavBar = () => (
             <li> 
                 <NavLink to="/admin/categories" className="nav-menu-item">Minhas Categorias</NavLink>
             </li>
-            <li>
-                <NavLink to="/admin/users" className="nav-menu-item">Meus Usuários</NavLink>
-            </li>
+
+            {isAllowedByRole(['ROLE_ADMIN']) && (
+                <li>
+                    <NavLink to="/admin/users" className="nav-menu-item">Meus Usuários</NavLink>
+                </li>
+            )}
         </ul>
     </nav>
 );

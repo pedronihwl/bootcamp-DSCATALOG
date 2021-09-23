@@ -84,12 +84,16 @@ type AccessToken = {
     authorities: Role[]
 }
 
-type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN'
+export type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN'
 
 export const getTokenDecoded = () => {
     const sessionData = recoverSessionData()
-    const tokenDecoded = jwtDecode(sessionData.access_token)
-    return tokenDecoded as AccessToken; 
+    try {
+        const tokenDecoded = jwtDecode(sessionData.access_token)
+        return tokenDecoded as AccessToken; 
+    } catch (error) {
+        return { } as AccessToken
+    }
 }
 
 const isTokenValid = () => {
@@ -104,4 +108,12 @@ export const isAuthenticated = () => {
 
     const sessionData = recoverSessionData();
     return sessionData.access_token && isTokenValid();
+}
+
+export const isAllowedByRole = (roles : Role[] = []) => {
+    // Verificar se a lista contém a role do usuário
+    if (roles.length === 0){ return true;}
+    const { authorities } = getTokenDecoded()
+
+    return roles.some(r => authorities?.includes(r));
 }

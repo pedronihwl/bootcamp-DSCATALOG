@@ -1,22 +1,23 @@
 import NavBar from "./components/NavBar"
-import { Switch, Route } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import "./style.scss"
 import Product from "./components/Product"
+import PrivateRoute from 'core/components/PrivateRoute'
 
 const Admin = () => {
     return <div className="admin-content-container">
         <NavBar />
         <div className="admin-content">
             <Switch>
-                <Route path="/admin/products">
+                <PrivateRoute path="/admin/products">
                     <Product/>
-                </Route>
-                <Route path="/admin/categories">
+                </PrivateRoute>
+                <PrivateRoute path="/admin/categories">
                     <h1>Categorias</h1>
-                </Route>
-                <Route path="/admin/users">
+                </PrivateRoute>
+                <PrivateRoute path="/admin/users" allowedRoles={['ROLE_ADMIN']}>
                     <h1>Usuários</h1>
-                </Route>
+                </PrivateRoute>
             </Switch>
         </div>
     </div>
