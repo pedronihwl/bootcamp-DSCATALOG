@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BaseForm from "../../BaseForm";
-import { makePrivateRequest } from '../../../../../core/utils/requests';
+import { makePrivateRequest, makeRequest } from '../../../../../core/utils/requests';
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Category } from 'core/types/Product'
 
 type FormState = {
@@ -14,9 +14,29 @@ type FormState = {
     imgUrl?: string;
 }
 
+type ParamsType = {
+    productId: string;
+}
+
 const Form = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormState>()
     const history = useHistory()
+    const { productId } = useParams<ParamsType>()
+    const isEditing = productId !== 'create'
+
+    useEffect(() => {
+       
+        if(isEditing) {
+            makeRequest({ url: `/products/${productId}`})
+            .then(r => {
+                setValue('name', r.data.name)
+                setValue('price', r.data.price)
+                setValue('description', r.data.description)
+                setValue('imgUrl', r.data.imgUrl)
+            })
+
+        }
+    }, [productId, isEditing, setValue])
 
     const onSubmitHandle = (formState: FormState) => {
         let cat : Category = {id: 1, name: ''}
@@ -26,19 +46,23 @@ const Form = () => {
             categories: [cat]
         }
 
-        makePrivateRequest({url: "/products", met: "POST", data})
+        makePrivateRequest({
+            url: isEditing ? "/products/" + productId : "/products", 
+            met: isEditing ? "PUT" : "POST", 
+            data
+        })
         .then(() => {
-            toast.info('Produto cadastrado com sucesso')
+            toast.info('Produto salvo com sucesso')
             history.push('/admin/products')
         })
         .catch(() => {
-            toast.error('Erro ao cadastrar produto')
+            toast.error('Erro ao salvar produto')
         })
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmitHandle)}>
-            <BaseForm title="CADASTRAR UM PRODUTO">
+            <BaseForm title={isEditing ? "EDITAR UM PRODUTO" : "CADASTRAR UM PRODUTO"}>
                 <div className="row">
                     <div className="col-6">
                         <div className="margin-bottom-30">
