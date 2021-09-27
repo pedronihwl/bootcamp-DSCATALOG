@@ -1,73 +1,90 @@
 import React from "react";
-import { useState } from "react";
 import BaseForm from "../../BaseForm";
 import { makePrivateRequest } from '../../../../../core/utils/requests';
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
+import { Category } from 'core/types/Product'
 
 type FormState = {
     name: string;
-    category: string;
+    categories: Category[];
     price: string;
     description?: string;
+    imgUrl?: string;
 }
 
 const Form = () => {
-    // Fonte unica de verdade
-    // O valor do input está sendo capturado e refletido
-    const [formData, setFormData] = useState<FormState>({
-        name: '',
-        category: '1',
-        price: '',
-    })
+    const { register, handleSubmit, formState: { errors } } = useForm<FormState>()
+    const history = useHistory()
 
-    const onHandleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const key = e.target.name;
-        const value = e.target.value;
+    const onSubmitHandle = (formState: FormState) => {
+        let cat : Category = {id: 1, name: ''}
 
-        // Retornar tudo o que já existia no formData acrescentado de uma prop dinâmica <key|value> 
-        setFormData(data => ({...data, [key]: value}))
-    }
-
-    const onSubmitHandle = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const payload = {
-            ...formData,
-            imgUrl: "https://tecnoblog.net/wp-content/uploads/2020/11/playstation_5_produto.png",
-            categories: [{id: formData.category}]
+        const data = {
+            ...formState,
+            categories: [cat]
         }
 
-        makePrivateRequest({url: "/products", met: "POST", data: payload})
-        .then(() => setFormData({name: '', category: '', price: '', description: ''}))
-
-        console.log(formData)
+        makePrivateRequest({url: "/products", met: "POST", data})
+        .then(() => {
+            toast.info('Produto cadastrado com sucesso')
+            history.push('/admin/products')
+        })
+        .catch(() => {
+            toast.error('Erro ao cadastrar produto')
+        })
     }
 
     return (
-        <form onSubmit={onSubmitHandle}>
+        <form onSubmit={handleSubmit(onSubmitHandle)}>
             <BaseForm title="CADASTRAR UM PRODUTO">
                 <div className="row">
                     <div className="col-6">
-                        <input type="text" className="form-control mb-5" placeholder="Nome do Produto"
-                            onChange={onHandleChange}
-                            value={formData.name}
-                            name="name"
-                        />
-                        <input type="text" className="form-control mb-5" placeholder="Preço"
-                            onChange={onHandleChange}
-                            value={formData.price}
-                            name="price"
-                        />
-                        <select className="form-control mb-5" onChange={onHandleChange} 
-                        value={formData.category}
-                        name="category"
-                        >
-                            <option value="1">Livros</option>
-                            <option value="2">Computadores</option>
-                            <option value="3">Eletrônicos</option>
-                        </select>
+                        <div className="margin-bottom-30">
+                            <input type="text" className="form-control input-base" placeholder="Nome do Produto"
+                                {...register('name', { 
+                                    required: "Campo obrigatório" , 
+                                    minLength: {value: 5, message: 'Deve ter no mínimo 5 letras'},
+                                    maxLength: {value: 60, message: 'No máximo 60 letras' }
+                                })}
+                            />
+                            {errors.name && (
+                                <div className="invalid-feedback d-block">
+                                    {errors.name.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="margin-bottom-30">
+                            <input type="number" className="form-control input-base" placeholder="Preço"
+                                {...register('price', { required: "Campo obrigatório" })}
+                            />
+                            {errors.price && (
+                                <div className="invalid-feedback d-block">
+                                    {errors.price.message}
+                                </div>
+                            )}
+                        </div>
+                        <div className="margin-bottom-30">
+                            <input type="text" className="form-control input-base" placeholder="Imagem do Produto"
+                                {...register('imgUrl', { required: "Campo obrigatório" })}
+                            />
+                            {errors.imgUrl && (
+                                <div className="invalid-feedback d-block">
+                                    {errors.imgUrl.message}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="col-6">
-                        <textarea name="description" cols={30} rows={10} onChange={onHandleChange} value={formData.description} className="form-control"></textarea>
+                        <textarea cols={30} rows={10} className="form-control input-base"
+                            {...register('description', { required: "Campo obrigatório" })}
+                        />
+                        {errors.description && (
+                                <div className="invalid-feedback d-block">
+                                    {errors.description.message}
+                                </div>
+                        )}
                     </div>
                 </div>
             </BaseForm>
