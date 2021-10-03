@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BaseForm from "../../BaseForm";
 import { makePrivateRequest, makeRequest } from '../../../../../core/utils/requests';
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useHistory, useParams } from "react-router-dom";
 import { Category } from 'core/types/Product'
+import Select from 'react-select'
+import './style.scss'
+import CurrencyInput from "react-currency-input-field";
 
 type FormState = {
     name: string;
@@ -19,13 +22,23 @@ type ParamsType = {
 }
 
 const Form = () => {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormState>()
+    const { register, handleSubmit, formState: { errors }, setValue, control} = useForm<FormState>()
     const history = useHistory()
     const { productId } = useParams<ParamsType>()
     const isEditing = productId !== 'create'
+    const [categories, setCategories] = useState<Category[]>([])
+    const [isLoadingCat, setIsLoadingCat] = useState(false)
+
 
     useEffect(() => {
-       
+        setIsLoadingCat(true)
+        makeRequest({ url: '/categories'})
+        .then(r => setCategories(r.data.content))
+        .finally(() => setIsLoadingCat(false))
+    },[])
+
+
+    useEffect(() => {
         if(isEditing) {
             makeRequest({ url: `/products/${productId}`})
             .then(r => {
@@ -33,18 +46,16 @@ const Form = () => {
                 setValue('price', r.data.price)
                 setValue('description', r.data.description)
                 setValue('imgUrl', r.data.imgUrl)
+                setValue('categories', r.data.categories)
             })
 
         }
     }, [productId, isEditing, setValue])
 
-    const onSubmitHandle = (formState: FormState) => {
-        let cat : Category = {id: 1, name: ''}
+    const onSubmitHandle = (data: FormState) => {
+        data.price = data.price.replace(',','.')
 
-        const data = {
-            ...formState,
-            categories: [cat]
-        }
+        console.log(data)
 
         makePrivateRequest({
             url: isEditing ? "/products/" + productId : "/products", 
@@ -55,8 +66,9 @@ const Form = () => {
             toast.info('Produto salvo com sucesso')
             history.push('/admin/products')
         })
-        .catch(() => {
+        .catch(error => {
             toast.error('Erro ao salvar produto')
+            console.log(error.response.data)
         })
     }
 
@@ -79,9 +91,45 @@ const Form = () => {
                                 </div>
                             )}
                         </div>
+
                         <div className="margin-bottom-30">
-                            <input type="number" className="form-control input-base" placeholder="Preço"
-                                {...register('price', { required: "Campo obrigatório" })}
+                            <Controller 
+                            name="categories"
+                            rules={{ required: true}}
+                            control={control}
+                            render={({ field }) => (
+                                <Select {...field}
+                                    isLoading={isLoadingCat}
+                                    options={categories} 
+                                    getOptionLabel={(option: Category) => option.name}
+                                    getOptionValue={(option: Category) => String(option.id)}
+                                    isMulti
+                                    classNamePrefix="cat-select"
+                                    placeholder="Categorias"
+                                />)} 
+                            />
+
+                            {errors.categories && (
+                                <div className="invalid-feedback d-block">
+                                    Campo obrigatório
+                                </div>
+                            )}
+                        </div>
+                        <div className="margin-bottom-30">
+
+                            <Controller
+                            name="price"
+                            control={control}
+                            rules={{ required: "Campo obrigatório"}}
+                            render={({ field: { value, onChange } }) => (
+                                <CurrencyInput
+                                placeholder="Preço"
+                                className="form-control input-base"
+                                value={value}
+                                intlConfig={{locale: 'pt-BR', currency: 'BRL' }}
+                                onValueChange={onChange}
+                                />
+                            )}
                             />
                             {errors.price && (
                                 <div className="invalid-feedback d-block">
