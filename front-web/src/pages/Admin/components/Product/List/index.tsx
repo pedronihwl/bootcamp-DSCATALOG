@@ -21,7 +21,7 @@ const List = () => {
         const confirm = window.confirm('Deseja realmente excluir o produto?')
 
         if(confirm){
-            makePrivateRequest({ url: `/products/${productId}`, met: 'DELETE', })
+            makePrivateRequest({ url: `/products/${productId}`, method: 'DELETE', })
             .then(() => {
                 toast.info('Produto excluido com sucesso')
                 getProducts();

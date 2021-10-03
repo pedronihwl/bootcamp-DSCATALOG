@@ -1,15 +1,7 @@
-import axios, { Method } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import qs from 'qs'
 import history from './history'
 import jwtDecode from 'jwt-decode'
-
-type Params = {
-    met?: Method;
-    url: string;
-    data?: object | string;
-    params?: object;
-    headers?: object;
-}
 
 type LoginDate = {
     username: string;
@@ -18,13 +10,10 @@ type LoginDate = {
 
 const BASE_URL = 'https://nihwl-dscatalog.herokuapp.com'
 
-export const makeRequest = ({met, url, data, params, headers}: Params) => {
+export const makeRequest = (params: AxiosRequestConfig) => {
     return axios({
-        method: met,
-        url: `${BASE_URL}${url}`,
-        data,
-        params,
-        headers
+        ...params,
+        baseURL: BASE_URL
     })
 }
 
@@ -41,15 +30,15 @@ export const makeLogin = (data: LoginDate) => {
 
     const payload = qs.stringify({...data, grant_type: 'password'})
 
-    return makeRequest({url: '/oauth/token', data: payload, met: 'POST', headers: headers});
+    return makeRequest({url: '/oauth/token', data: payload, method: 'POST', headers: headers});
 }
 
-export const makePrivateRequest = ({met, url, data, params}: Params) => {
+export const makePrivateRequest = (params: AxiosRequestConfig) => {
     const token = recoverSessionData();
 
     const headers = { Authorization: `Bearer ${token.access_token}` }
 
-    return makeRequest({met, url, data, params, headers});
+    return makeRequest({...params, headers});
 }
 
 axios.interceptors.response.use((response) => {return response}, (error) => {
