@@ -8,7 +8,9 @@ type LoginDate = {
     password: string;
 }
 
-const BASE_URL = 'https://nihwl-dscatalog.herokuapp.com'
+const BASE_URL = process.env.REACT_APP_BACKEND_URL ?? 'https://nihwl-dscatalog.herokuapp.com'
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog'
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog123'
 
 export const makeRequest = (params: AxiosRequestConfig) => {
     return axios({
@@ -16,9 +18,6 @@ export const makeRequest = (params: AxiosRequestConfig) => {
         baseURL: BASE_URL
     })
 }
-
-const CLIENT_ID = 'dscatalog'
-const CLIENT_SECRET = 'dscatalog123'
 
 export const makeLogin = (data: LoginDate) => {
     const token = `${CLIENT_ID}:${CLIENT_SECRET}`
