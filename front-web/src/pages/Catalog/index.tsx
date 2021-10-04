@@ -1,11 +1,12 @@
 import './style.scss'
 import ProductCard from './components/ProductCard/ProductCard'
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { makeRequest } from 'core/utils/requests'
 import { ContentResponse } from 'core/types/Product'
 import ProductCardLoader from './components/Loaders/ProductCardLoader'
 import Pagination from 'core/components/Pagination'
+import ProductFilter, { FilterForm } from 'core/components/ProductFilter'
 
 const Catalog = () => {
 
@@ -13,22 +14,31 @@ const Catalog = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [activePage, setActivePage] = useState(0);
 
-    useEffect(() => {
+    const getProducts = useCallback((filter?: FilterForm) => {
         const params = {
             page: activePage,
-            size: 12
-        
+            size: 12,
+            name: filter?.name,
+            categoryId: filter?.categoryId
         }
         setIsLoading(true);
         makeRequest({url: '/products', params,})
         .then(r => setContentResponse(r.data)).finally(() => {
             setIsLoading(false);
         })
+
     },[activePage])
+
+    useEffect(() => {
+        getProducts();
+    },[getProducts])
 
     
     return (<div className="catalog-container">
-        <h1 className="catalog-title">Catálogo de produtos</h1>
+        <div className="d-flex justify-content-between">
+            <h1 className="catalog-title">Catálogo de produtos</h1>
+            <ProductFilter onSearch={filter => getProducts(filter)}/>
+        </div>
         <div className="catalog-products">
             {isLoading ? <ProductCardLoader/> : contentResponse?.content.map(p => (
                 <Link to={`/products/${p.id}`} key={p.id}>

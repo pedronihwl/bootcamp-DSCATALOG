@@ -25,11 +25,11 @@ const Card = ({ product, onRemove } : Props) => {
                     </div>
                 </div>
                 <div className="col-3 pt-3 pr-5">
-                    <Link to={`/admin/products/${product.id}`} className="btn btn-outline-secondary btn-block border-radius-10 mb-3 btn-edit">
+                    <Link to={`/admin/products/${product.id}`} className="btn btn-outline-secondary btn-block border-radius-10 mb-3">
                         EDITAR
                     </Link>
                     <button type="button" className="btn btn-outline-danger btn-block border-radius-10 font-weight-bold " onClick={() => onRemove(product.id)}>
-                        EXCLUIR
+                        <strong>EXCLUIR</strong>
                     </button>
                 </div>
             </div>
