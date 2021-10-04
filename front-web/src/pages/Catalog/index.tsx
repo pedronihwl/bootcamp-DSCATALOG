@@ -3,7 +3,7 @@ import ProductCard from './components/ProductCard/ProductCard'
 import { Link } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
 import { makeRequest } from 'core/utils/requests'
-import { ContentResponse } from 'core/types/Product'
+import { Category, ContentResponse } from 'core/types/Product'
 import ProductCardLoader from './components/Loaders/ProductCardLoader'
 import Pagination from 'core/components/Pagination'
 import ProductFilter, { FilterForm } from 'core/components/ProductFilter'
@@ -14,12 +14,31 @@ const Catalog = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [activePage, setActivePage] = useState(0);
 
-    const getProducts = useCallback((filter?: FilterForm) => {
+    const [name, setName] = useState('')
+    const [category, setCategory] = useState<Category>()
+
+    const clearFields = () => {
+        setActivePage(0)
+        setCategory(undefined)
+        setName('')
+    }
+
+    const handleChangeName = (name: string) => {
+        setActivePage(0)
+        setName(name)
+    }
+
+    const handleChangeCat = (category: Category) => {
+        setActivePage(0)
+        setCategory(category)
+    }
+
+    const getProducts = useCallback(() => {
         const params = {
             page: activePage,
             size: 12,
-            name: filter?.name,
-            categoryId: filter?.categoryId
+            categoryId: category?.id,
+            name
         }
         setIsLoading(true);
         makeRequest({url: '/products', params,})
@@ -27,7 +46,7 @@ const Catalog = () => {
             setIsLoading(false);
         })
 
-    },[activePage])
+    },[activePage, name, category])
 
     useEffect(() => {
         getProducts();
@@ -37,7 +56,13 @@ const Catalog = () => {
     return (<div className="catalog-container">
         <div className="d-flex justify-content-between">
             <h1 className="catalog-title">Catálogo de produtos</h1>
-            <ProductFilter onSearch={filter => getProducts(filter)}/>
+            <ProductFilter 
+            handleChangeCat={handleChangeCat}
+            handleChangeName={handleChangeName}
+            clearFields={clearFields}
+            name={name}
+            category={category}
+            />
         </div>
         <div className="catalog-products">
             {isLoading ? <ProductCardLoader/> : contentResponse?.content.map(p => (

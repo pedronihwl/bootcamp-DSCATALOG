@@ -11,15 +11,16 @@ export type FilterForm = {
 }
 
 type Props = {
-    onSearch: (filter: FilterForm) => void;
+    name?: string;
+    category?: Category;
+    handleChangeName: (name: string) => void;
+    handleChangeCat: (category: Category) => void;
+    clearFields: () => void;
 }
 
-const ProductFilter = ({ onSearch }: Props) => {
+const ProductFilter = ({ name, category, handleChangeCat, handleChangeName, clearFields }: Props) => {
     const [categories, setCategories] = useState<Category[]>([])
     const [isLoadingCat, setIsLoadingCat] = useState(false)
-    const [name, setName] = useState('')
-    const [category, setCategory] = useState<Category>()
-
 
     useEffect(() => {
         setIsLoadingCat(true)
@@ -29,19 +30,9 @@ const ProductFilter = ({ onSearch }: Props) => {
 
     }, [])
 
-    const clearFields = () => {
-        setCategory(undefined)
-        setName('')
-        onSearch({ name: '', categoryId: undefined})
-    }
-
     return <div className="card-base product-filter-container">
         <div className="product-filter-search">
-            <input className="form-control"  value={name} type="text" placeholder="Pesquisar produto" onChange={event => {
-                const n = event.target.value
-                setName(n)
-                onSearch({ name: n , categoryId: category?.id})
-            }} />
+            <input className="form-control"  value={name} type="text" placeholder="Pesquisar produto" onChange={event => handleChangeName(event.target.value)} />
             <SearchIcon />
         </div>
 
@@ -55,11 +46,7 @@ const ProductFilter = ({ onSearch }: Props) => {
             className="category-product-select"
             classNamePrefix="cat-product-select"
             placeholder="Categorias"
-            onChange={event => {
-                const cat : Category = event as Category
-                setCategory(cat)
-                onSearch({ name , categoryId: cat?.id})
-            }}
+            onChange={value => handleChangeCat(value as Category)}
             isClearable
         />
         <button className="btn btn-outline-secondary border-radius-10" onClick={clearFields}>LIMPAR FILTROS</button>
