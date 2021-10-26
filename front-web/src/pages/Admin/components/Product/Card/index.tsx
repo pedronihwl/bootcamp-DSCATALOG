@@ -11,12 +11,11 @@ const Card = ({ product, onRemove } : Props) => {
 
     return (
         <div className="card-base product-card-admin">
-            <div className="row">
-                <div className="col-2 text-center border-right py-3">
+                <div className="text-center border-right py-3">
                     <img alt={product.name} src={product.imgUrl} className="product-card-admin-img"/>
                 </div>
                 <div className="col-7 py-3">
-                    <h3>{product.name}</h3>
+                    <h3 className="admin-card-content">{product.name}</h3>
                     <ProductPrice price={product.price}/>
                     <div>
                         {product.categories.map(cat => (
@@ -32,7 +31,6 @@ const Card = ({ product, onRemove } : Props) => {
                         <strong>EXCLUIR</strong>
                     </button>
                 </div>
-            </div>
         </div>
     )
 }

@@ -27,3 +27,40 @@
     }
 }
 
+// mobile breakpoints 
+@media (max-width: 768px) {
+    .nav-menu-container {
+        width: 100%;
+        height: 120px;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-menu-container ul {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+
+    }
+
+    .nav-menu-item {
+        width: 200px;
+        height: 60px;
+        border-radius: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 0px;
+        background-color: #F2F2F2;
+    }
+    
+
+    
+}
+@media (max-width: 576px) {
+
+
+}
+

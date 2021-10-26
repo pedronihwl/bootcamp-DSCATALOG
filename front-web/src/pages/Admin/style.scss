@@ -11,4 +11,17 @@
     margin: 45px 0;
 }
 
+// mobile breakpoints 
+@media (max-width: 768px) {
+    .admin-content-container {
+        flex-direction: column;
+    }
+}
+@media (max-width: 576px) {
+
+
+}
+
+
+
 

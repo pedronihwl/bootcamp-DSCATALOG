@@ -1,4 +1,6 @@
 .product-card-admin{
+    display: flex;
+    flex-direction: row;
     margin-bottom: 20px;
     border-radius: 10px;
 
@@ -12,6 +14,18 @@
 }
 
 .product-card-admin-img{
+    margin: 0px 10px;
     width: 100px;
     height: 100px;
+}
+
+// mobile breakpoints 
+@media (max-width: 768px) {  
+    .admin-card-content {
+        margin-left: 10px;
+    }
+}
+@media (max-width: 576px) {
+
+
 }

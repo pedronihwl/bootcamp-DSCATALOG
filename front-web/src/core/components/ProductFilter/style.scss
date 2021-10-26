@@ -50,3 +50,14 @@
         color: #9E9E9E !important;
     }
 }
+
+// mobile breakpoints 
+@media (max-width: 768px) {
+    .product-filter-container {
+        width: 100%;
+    }
+}
+@media (max-width: 576px) {
+
+
+}
