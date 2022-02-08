@@ -43,6 +43,9 @@
 }
 @media (max-width: 576px) {
 
+    .catalog-products {
+        grid-template-columns: repeat(auto-fill,100%);
 
+    }
 }
 

@@ -80,5 +80,28 @@
 }
 @media (max-width: 576px) {
 
+    .home-content {
+        flex-direction: column-reverse;
+        padding: 0px;
+    }
 
+    .main-image {
+        width: 70vw !important;
+        margin: -60px -80px -80px -80px;
+    }
+
+    .home-title {
+        font-size: 1.5rem;
+        text-align: center;
+        line-height: 30px;
+        letter-spacing: 0;
+    }
+
+    .home-description {
+        font-size: 0.7em;
+        text-align: center;
+        font-weight: 400;
+        margin: 40px 0px;
+
+    }
 }
